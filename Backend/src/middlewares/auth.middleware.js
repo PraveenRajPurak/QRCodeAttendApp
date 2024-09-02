@@ -30,7 +30,7 @@ export const verifyUserToken = asyncHandler(async (req, res, next) => {
         }
 
         req.user = user;
-
+        console.log("User coming out of middleware");
         next()
     }
     catch(error){
