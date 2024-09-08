@@ -109,8 +109,7 @@ const getStudentsInaClass = asyncHandler(async (req, res) => {
 
 const getAttendanceofaStudent = asyncHandler(async (req, res) => {
 
-    const userId = req.user._id;
-    const classId = req.params.classId;
+    const {classId} = req.body;
 
     const student = await Student.findOne({
         user: new mongoose.Types.ObjectId(req.user._id)

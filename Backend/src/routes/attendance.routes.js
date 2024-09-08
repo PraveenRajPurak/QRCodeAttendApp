@@ -11,7 +11,7 @@ import {
 const router = Router();
 
 router.route("/create-attendance/:classId").post(verifyProfessorToken, takeAttendance);
-router.route("/mark-attendance/:classId").post(verifyUserToken, markAttendance);
+router.route("/mark-attendance").post(verifyUserToken, markAttendance);
 
 export default router;
 
