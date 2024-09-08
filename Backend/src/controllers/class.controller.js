@@ -136,10 +136,6 @@ const getAttendanceofaStudent = asyncHandler(async (req, res) => {
 
     console.log("Attendance Record : ", attendanceRecord)
 
-    if(!attendanceRecord) {
-        throw new ApiError(404, "Attendance record not found");
-    }
-
     let attendanceStatus = "Absent";
 
     if(attendanceRecord.status === true) {
