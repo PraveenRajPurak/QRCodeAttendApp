@@ -17,7 +17,7 @@ const router = Router();
 
 router.route("/setup-student").post(verifyUserToken, setupStudent);
 router.route("/get-courses").get(verifyUserToken, getCourses);
-router.route("/get-classes/:courseId").get(verifyUserToken, getClasses);
+router.route("/get-classes").post(verifyUserToken, getClasses);
 router.route("/check-student-account-presence").get(verifyUserToken, checkStudentAccountPresence);
 router.route("/get-student-data").get(verifyUserToken, getStudentdata);
 router.route("/get-student-plus-user-data").post(verifyUserToken, getStudentPlusUserData);
