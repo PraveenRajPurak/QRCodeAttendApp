@@ -138,7 +138,7 @@ const getAttendanceofaStudent = asyncHandler(async (req, res) => {
 
     let attendanceStatus = "Absent";
 
-    if(attendanceRecord.status === true) {
+    if(attendanceRecord && attendanceRecord.status === true) {
         attendanceStatus = "Present";
     }
 
