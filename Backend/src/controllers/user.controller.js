@@ -11,6 +11,36 @@ import { Class } from "../models/class.mjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
+const EARTH_RADIUS = 6371000;
+
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+
+function haversine(lat1, lon1, lat2, lon2) {
+    let φ1 = lat1;
+    let φ2 = lat2;
+    let Δφ = lat2 - lat1;
+    let Δλ = lon2 - lon1;
+
+    console.log("Value of φ1: ", φ1);
+    console.log("Value of φ2: ", φ2);
+    console.log("Value of Δφ: ", Δφ);
+    console.log("Value of Δλ: ", Δλ);
+
+    // Haversine formula
+    let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    console.log("Value of c: ", c);
+
+    let distance = EARTH_RADIUS * c;
+
+    return distance;
+}
+
 const generateAccessandRefreshToken = async (userId) => {
 
     try {
@@ -386,6 +416,66 @@ const trackselfAttendance = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, "Attendance record fetched successfully", { attendanceRecord }));
 });
 
+const localityValidator = asyncHandler(async (req, res, next) => {
+
+    let valid = false;
+    
+    const { classId, user_latitude, user_longitude, user_altitude } = req.body;
+
+    console.log("Information from User : ","Class Id : ", classId, "Latitude : ", user_latitude, "Longitude : ", user_longitude, "Altitude : ", user_altitude);
+
+    if(!classId || !user_latitude || !user_longitude || !user_altitude) {
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const class_ = await Class.findById(classId);
+    if(!class_) {
+        throw new ApiError(404, "Class not found");
+    }
+
+    const classRoom_ = await ClassRoom.findById(class_.classRoom);
+    if(!classRoom_) {
+        throw new ApiError(404, "Classroom not found");
+    }
+
+    const { longitude, latitude, altitude, radius } = classRoom_;
+
+    console.log("Classroom Information : ","Longitude : ", longitude, "Latitude : ", latitude, "Altitude : ", altitude, "Radius : ", radius);
+
+    const user_latitude_in_rad = toRadians(user_latitude);
+    const user_longitude_in_rad = toRadians(user_longitude);
+
+    const cr_latitude_in_rad = toRadians(latitude);
+    const cr_longitude_in_rad = toRadians(longitude);
+
+    const difference_altitute = Math.abs(user_altitude - altitude);
+
+    console.log("Difference Altitude : ", difference_altitute);
+
+    if(difference_altitute > 3){
+        valid = false;
+        console.log("Check if user is in the same altitude. "," Value of value variable : ", valid);
+        return res.status(200).json(
+            new ApiResponse(200, "User is not in the same altitude as the classroom", valid)
+        )
+    }
+
+    const distance = haversine(user_latitude_in_rad, user_longitude_in_rad, cr_latitude_in_rad, cr_longitude_in_rad);
+
+    console.log("Distance : ", distance);
+
+    if(distance > radius) {
+        valid = false;
+        return res.status(200).json(
+            new ApiResponse(200, "User is not in the same locality as the classroom", valid)
+        )
+    }
+
+    valid = true;
+    return res.status(200).json(
+        new ApiResponse(200, "User is in the same locality as the classroom", valid)
+    )
+})
 
 export {
     registerUser,
@@ -397,6 +487,7 @@ export {
     updatePhoneNumber,
     updatePassword,
     updateAvatar,
-    trackselfAttendance
+    trackselfAttendance,
+    localityValidator
 }
 
