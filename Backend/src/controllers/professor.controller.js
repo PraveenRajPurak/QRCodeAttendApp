@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Professor } from "../models/professors.mjs";
 import { Course } from "../models/course.mjs";
+import { College } from "../models/college.mjs";
 
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -201,6 +202,16 @@ const get_college_info_as_Prof = asyncHandler(async (req, res) => {
         }
     ]
     )
+
+    if (!college) {
+        throw new ApiError(404, "College not found");
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, college, "College fetched successfully",)
+        );
 })
 
 
