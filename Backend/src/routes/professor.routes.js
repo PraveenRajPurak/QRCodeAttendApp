@@ -8,6 +8,7 @@ import {
     logoutProfessor,
     refreshProfessorToken,
     coursesTaughtbyProfessor,
+    get_college_info_as_Prof
 } from "../controllers/professor.controller.js";
 
 const router = Router();
@@ -19,6 +20,8 @@ router.route("/logout").post(verifyProfessorToken, logoutProfessor);
 router.route("/refreshProfessorToken").get(verifyProfessorToken, refreshProfessorToken);
 
 router.route("/courses-taught-by-professor").get(verifyProfessorToken, coursesTaughtbyProfessor);
+
+router.route("/get-college-info-as-prof").get(verifyProfessorToken, get_college_info_as_Prof);
 
 export default router;
 
