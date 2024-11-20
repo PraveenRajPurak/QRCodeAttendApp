@@ -178,7 +178,7 @@ const coursesTaughtbyProfessor = asyncHandler(async (req, res) => {
 });
 
 const get_college_info_as_Prof = asyncHandler(async (req, res) => {
-    const profId = req.professor.profId;
+    const profId = req.professor._id;
 
     console.log("profId : ", profId);
 
