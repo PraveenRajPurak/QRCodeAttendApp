@@ -12,7 +12,7 @@ import mongoose from "mongoose";
 
 const setupCourse = asyncHandler(async (req, res) => {
     const college = await College.findOne({ owner: req.owner._id });
-    
+
     console.log("College : ", college)
 
     if (!college) {
@@ -53,62 +53,62 @@ const setupCourse = asyncHandler(async (req, res) => {
 
     await professor.save(
         {
-            validateBeforeSave : false
+            validateBeforeSave: false
         }
     );
 
     college.courses.push(courseCreation._id)
 
     await college.save({
-        validateBeforeSave : false
+        validateBeforeSave: false
     });
-    
+
 
     res.status(201).json({ message: "Course created successfully", course: courseCreation });
 });
 
-const enrollInaCourse = asyncHandler (async (req,res) => {
+const enrollInaCourse = asyncHandler(async (req, res) => {
 
-    const {code} = req.body;
+    const { code } = req.body;
 
-    const course = await Course.findOne({code});
+    const course = await Course.findOne({ code });
 
-    const student = await Student.findOne({user: new mongoose.Types.ObjectId(req.user._id)});
+    const student = await Student.findOne({ user: new mongoose.Types.ObjectId(req.user._id) });
 
-    if(!course) {
+    if (!course) {
         throw new ApiError(404, "Course not found");
     }
 
     course.students.push(new mongoose.Types.ObjectId(student._id));
     await course.save(
         {
-            validateBeforeSave : false
+            validateBeforeSave: false
         }
     );
 
     student.course.push(new mongoose.Types.ObjectId(course._id));
     await student.save(
         {
-            validateBeforeSave : false
+            validateBeforeSave: false
         }
     );
 
-    const result = await Course.findOne({code}).select("-owner -professor -students -classes");
+    const result = await Course.findOne({ code }).select("-owner -professor -students -classes");
 
-    if(!result) {
+    if (!result) {
         throw new ApiError(404, "Course not found");
     }
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200, "Course enrolled successfully", result)
-    );
+        .status(200)
+        .json(
+            new ApiResponse(200, "Course enrolled successfully", result)
+        );
 
 })
 
 const getClasses = asyncHandler(async (req, res) => {
-    const courseId = req.params.courseId;
+    const { courseId } = req.body;
 
     if (!courseId) {
         throw new ApiError(400, "Course id is required");
@@ -130,7 +130,7 @@ const getClasses = asyncHandler(async (req, res) => {
 });
 
 const getstudentsInaCourse = asyncHandler(async (req, res) => {
-    const courseId = req.params.courseId;
+    const { courseId } = req.body;
     console.log("courseId : ", courseId)
     const students = await Student.aggregate([
         {
@@ -150,14 +150,14 @@ const getstudentsInaCourse = asyncHandler(async (req, res) => {
             }
         },
         {
-            $addFields : {
-                name : {$arrayElemAt : ["$user.fullname", 0]},
+            $addFields: {
+                name: { $arrayElemAt: ["$user.fullname", 0] },
             }
         },
         {
             $project: {
-                name : 1,
-                enrollNo : 1,
+                name: 1,
+                enrollNo: 1,
             }
         }
     ])
@@ -174,7 +174,7 @@ const getstudentsInaCourse = asyncHandler(async (req, res) => {
 });
 
 const getAttendanceRecordInaCourse = asyncHandler(async (req, res) => {
-    const courseId = req.params.courseId;
+    const {courseId} = req.body;
     console.log("Course ID : ", courseId)
     const attendanceRecord = await Course.aggregate([
         {
@@ -230,7 +230,7 @@ const getAttendanceRecordInaCourse = asyncHandler(async (req, res) => {
                 pipeline: [
                     {
                         $match: {
-                            status : "Regular"
+                            status: "Regular"
                         }
                     }
                 ]
@@ -278,17 +278,17 @@ const getAttendanceRecordInaCourse = asyncHandler(async (req, res) => {
 
 });
 
-const getCourseDetails = asyncHandler (async (req, res) => {
+const getCourseDetails = asyncHandler(async (req, res) => {
 
-    const { courseId } = req.params;
+    const { courseId } = req.body;
 
-    if(!courseId) {
+    if (!courseId) {
         throw new ApiError(400, "Course id is required");
     }
 
     const courseDetails = await Course.findById(courseId).select("-students -classes -owner -professor -attendances");
 
-    if(!courseDetails) {
+    if (!courseDetails) {
         throw new ApiError(404, "Course not found");
     }
 

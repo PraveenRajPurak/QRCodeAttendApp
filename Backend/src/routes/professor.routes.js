@@ -24,4 +24,3 @@ router.route("/courses-taught-by-professor").get(verifyProfessorToken, coursesTa
 router.route("/get-college-info-as-prof").get(verifyProfessorToken, get_college_info_as_Prof);
 
 export default router;
-
