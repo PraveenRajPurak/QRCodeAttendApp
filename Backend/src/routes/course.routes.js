@@ -16,10 +16,10 @@ const router = Router();
 
 router.route("/setup-course").post(verifyOwnerToken, setupCourse);
 router.route("/enroll-in-a-course").post(verifyUserToken, enrollInaCourse);
-router.route("/get-classes/").post(getClasses);
-router.route("/get-students/").post(getstudentsInaCourse);
-router.route("/get-attendance/").post(getAttendanceRecordInaCourse);
-router.route("/get-course-details/").post(getCourseDetails);
+router.route("/get-classes").post(getClasses);
+router.route("/get-students").post(getstudentsInaCourse);
+router.route("/get-attendance").post(getAttendanceRecordInaCourse);
+router.route("/get-course-details").post(getCourseDetails);
 
 export default router;
 

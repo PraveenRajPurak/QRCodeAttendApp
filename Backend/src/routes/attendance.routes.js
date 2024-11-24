@@ -10,7 +10,7 @@ import {
 
 const router = Router();
 
-router.route("/create-attendance/:classId").post(verifyProfessorToken, takeAttendance);
+router.route("/create-attendance").post(verifyProfessorToken, takeAttendance);
 router.route("/mark-attendance").post(verifyUserToken, markAttendance);
 
 export default router;
