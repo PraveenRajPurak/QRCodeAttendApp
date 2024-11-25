@@ -161,7 +161,7 @@ const getAttendanceofaStudent = asyncHandler(async (req, res) => {
 
 const getAttendanceRecordFortheClass = asyncHandler(async (req, res) => { 
 
-    const {classId} = req.params; 
+    const {classId} = req.body; 
 
     if(!classId) {
         throw new ApiError(400, "Class id is required");
