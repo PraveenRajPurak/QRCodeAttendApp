@@ -223,10 +223,52 @@ const getAttendanceRecordFortheClass = asyncHandler(async (req, res) => {
         );
  })
 
+ const getClassesOfToday = asyncHandler (async (req, res) => {
+
+    const classes = await Course.aggregate([
+        {
+            $match : {
+                professor: new mongoose.Types.ObjectId(req.professor._id)
+            }
+        },
+        {
+            $unwind : "$classes"
+        },
+        {
+            $lookup : {
+                from : "classes",
+                localField : "classes",
+                foreignField : "_id",
+                as : "classInfo",
+                pipeline : [
+                    {
+                        $match : {
+                            date : new Date()
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    console.log("Classes : ", classes)
+
+    if(!classes) {
+        throw new ApiError(404, "Classes not found");
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, "Classes fetched successfully", classes)
+        );
+ })
+
 export {
     createClass,
     getStudentsInaClass,
     getAttendanceRecordFortheClass,
     getAttendanceofaStudent,
-    getClassCode
+    getClassCode,
+    getClassesOfToday
 };

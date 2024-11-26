@@ -8,7 +8,8 @@ import {
     getStudentsInaClass,
     getAttendanceRecordFortheClass,
     getAttendanceofaStudent,
-    getClassCode
+    getClassCode,
+    getClassesOfToday
     
 } from "../controllers/class.controller.js";
 
@@ -19,6 +20,7 @@ router.route("/get-students/:classId").get(getStudentsInaClass);
 router.route("/get-attendance").post(getAttendanceRecordFortheClass);
 router.route("/get-attendance-of-a-student").post(verifyUserToken, getAttendanceofaStudent);
 router.route("/get-class-code/:classId").get(getClassCode);
+router.route("/get-classes-of-today").get(verifyProfessorToken, getClassesOfToday);
 
 export default router;
 
