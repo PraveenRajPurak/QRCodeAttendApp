@@ -239,14 +239,7 @@ const getAttendanceRecordFortheClass = asyncHandler(async (req, res) => {
                 from : "classes",
                 localField : "classes",
                 foreignField : "_id",
-                as : "classInfo",
-                pipeline : [
-                    {
-                        $match : {
-                            date : new Date()
-                        }
-                    }
-                ]
+                as : "classInfo"
             }
         }
     ])
