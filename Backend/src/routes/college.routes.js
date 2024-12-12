@@ -17,10 +17,10 @@ import {
 const router = Router();
 
 router.route("/setup-college").post(verifyOwnerToken, setupCollege);
-router.route("/get-students/:collegeId").get(verifyOwnerToken, getStudentsRecords);
-router.route("/get-professors/:collegeId").get(verifyOwnerToken, getProfessorsRecords);
+router.route("/get-students").post(verifyOwnerToken, getStudentsRecords);
+router.route("/get-professors").post(verifyOwnerToken, getProfessorsRecords);
 router.route("/setup-professor").post(verifyOwnerToken, setupProfessor);
-router.route("/courses-in-a-college/:collegeId").get(verifyOwnerToken, coursesInaCollege);
+router.route("/courses-in-a-college").post(verifyOwnerToken, coursesInaCollege);
 router.route("/check-college-ownership-presence").get(verifyOwnerToken, checkCollegeOwnershipPresence);
 router.route("/get-all-college-names").get(verifyOwnerToken, getAllCollegeNames);
 router.route("/get-college").get(verifyOwnerToken, getCollege);

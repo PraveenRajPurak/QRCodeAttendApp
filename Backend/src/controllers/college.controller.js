@@ -33,7 +33,7 @@ const setupCollege = asyncHandler(async (req, res) => {
 });
 
 const getStudentsRecords = asyncHandler(async (req, res) => {
-    const collegeId = req.params.collegeId;
+    const {collegeId} = req.body;
 
     if (!collegeId) {
         throw new ApiError(400, "College id is required");
@@ -56,7 +56,7 @@ const getStudentsRecords = asyncHandler(async (req, res) => {
 
 const getProfessorsRecords = asyncHandler(async (req, res) => {
 
-    const collegeId = req.params.collegeId;
+    const {collegeId} = req.body;
 
     console.log("College Id : ", collegeId)
 
@@ -143,7 +143,8 @@ const setupProfessor = asyncHandler(async (req, res) => {
 
 const coursesInaCollege = asyncHandler(async (req, res) => {
 
-    const collegeId = req.params.collegeId;
+    const {collegeId}= req.body;
+    console.log("College Id : ", collegeId)
 
     const courses = await Course.aggregate([
         {
