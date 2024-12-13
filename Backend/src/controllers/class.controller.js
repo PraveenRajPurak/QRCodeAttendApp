@@ -34,14 +34,6 @@ const createClass = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Course not found");
     }
 
-    const classRoom_ = await ClassRoom.findOne({
-        name: classroom
-    })
-
-    if (!classRoom_) {
-        throw new ApiError(404, "Classroom not found");
-    }
-
     const classCode = generateUniqueCode();
 
     const classCreation = await Class.create({
