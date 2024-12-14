@@ -61,7 +61,6 @@ const createClass = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(201, "Class created successfully", classCreation)
         )
-
 });
 
 const getStudentsInaClass = asyncHandler(async (req, res) => {
